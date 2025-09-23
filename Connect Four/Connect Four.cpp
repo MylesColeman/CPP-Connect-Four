@@ -51,10 +51,11 @@ int main()
 	
     bool gameOver = false;
     bool noughtTurn = true;
-    int chosenColumn = 0;
 
     while (gameOver == false) // Loops whilst game isn't over
     {
+        int chosenColumn = 0;
+
         if (noughtTurn)
         {
             std::cout << "Nought's turn, which column do you want to drop your piece into? ";
