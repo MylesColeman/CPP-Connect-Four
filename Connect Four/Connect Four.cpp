@@ -19,9 +19,7 @@ void printBoard(const std::vector<std::vector<char>>& board)
 		std::cout << divider;
 
         for (int c = 0; c < cols; c++)
-        {
             std::cout << " " << board[r][c] << " " << divider;
-        }
         std::cout << std::endl;
     }
 }
@@ -39,12 +37,13 @@ void updateBoard(std::vector<std::vector<char>>& board, int column, char playerP
     }
 }
 
+// Checks for a winner by looping through the whole board
 bool checkForWinner(const std::vector<std::vector<char>>& board, char playerPiece)
 {
     // Horizontal Win
     for (int r = 0; r < rows; r++)
     {
-        for (int c = 0; c <= cols - 4; c++) // The last few columns don't need to be checked as we're checking from the starting points
+        for (int c = 0; c <= cols - 4; c++) // Don't need to check last few columns, as they're impossible to win from. As we're checking from left to right - would exit bounds
         {
             if (board[r][c] == playerPiece &&
                 board[r][c + 1] == playerPiece &&
@@ -57,7 +56,7 @@ bool checkForWinner(const std::vector<std::vector<char>>& board, char playerPiec
     // Vertical Win
     for (int c = 0; c < cols; c++)
     {
-        for (int r = 0; r <= rows - 4; r++)
+        for (int r = 0; r <= rows - 4; r++) // Don't need to check last few rows, as they're impossible to win from. As we're checking from top to bottom - would exit bounds
         {
             if (board[r][c] == playerPiece &&
                 board[r + 1][c] == playerPiece &&
@@ -68,7 +67,30 @@ bool checkForWinner(const std::vector<std::vector<char>>& board, char playerPiec
     }
 
     // Horizontal Win
-
+    // Checking for \ Win 
+    for (int r = 0; r <= rows - 4; r++) // Don't need to check last few rows, as they're impossible to win from. As we're checking from top left, to bottom right - would exit bounds
+    {
+        for (int c = 0; c <= cols - 4; c++) // Don't need to check last few columns, as they're impossible to win from. As we're checking from top left, to bottom right - would exit bounds
+        {
+            if (board[r][c] == playerPiece &&
+                board[r + 1][c + 1] == playerPiece &&
+                board[r + 2][c + 2] == playerPiece &&
+                board[r + 3][c + 3] == playerPiece)
+                return true;
+        }
+    }
+    // Checking for / Win 
+    for (int r = 0; r <= rows - 4; r++) // Don't need to check last few rows, as they're impossible to win from. As we're checking from the top right, to the bottom left - would exit bounds
+    {
+        for (int c = 3; c < cols; c++) // Start further across as we're checking from the top right, to the bottom left. Impossible to win before this - would exit bounds
+        {
+            if (board[r][c] == playerPiece &&
+                board[r + 1][c - 1] == playerPiece &&
+                board[r + 2][c - 2] == playerPiece &&
+                board[r + 3][c - 3] == playerPiece)
+                return true;
+        }
+    }
 
     return false; // No winners
 }
@@ -93,13 +115,9 @@ int main()
         char currentPlayerPiece = (noughtTurn) ? nought : cross; // Checks whose turn it is for messages
 
         if (noughtTurn)
-        {
             std::cout << "Nought's turn, which column do you want to drop your piece into? ";
-        }
         else
-        {
             std::cout << "Cross's turn, which column do you want to drop your piece into? ";
-        }
 
         // Ensures the input is within bounds, in a free column, or input is numerical
         bool validInput = false;
