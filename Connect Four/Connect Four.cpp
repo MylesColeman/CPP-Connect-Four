@@ -32,14 +32,20 @@ void printBoard(const std::vector<std::vector<char>>& board)
 // Updates the board with the player's turn
 void updateBoard(std::vector<std::vector<char>>& board, int column, char playerPiece)
 {
+    if (noughtTurn)
+    {
+        std::cout << "Nought's turn, which row do you want to drop your counter in? (1-7)" << std::endl;
+		noughtTurn = false;
+    }  
+    else
+    {
+        std::cout << "Cross's turn, which row do you want to drop your counter in? (1-7)" << std::endl;
+		noughtTurn = true;
+    }
+    std::cout << std::endl;
+
     std::cin >> chosenColumn;
     chosenColumn -= 1; // Adjust for 0 index
-
-    if (noughtTurn)
-        std::cout << "Nought's turn, which row do you want to drop your counter in? (1-7)" << std::endl;
-    else
-        std::cout << "Cross's turn, which row do you want to drop your counter in? (1-7)" << std::endl;
-    std::cout << std::endl;
 
     for (int r = rows - 1; r >= 0; r--)
     {
@@ -63,8 +69,6 @@ int main()
     
 	printBoard(board);
     std::cout << std::endl;
-
-    
 	
     bool gameOver = false;
 
