@@ -64,7 +64,24 @@ int main()
             std::cout << "Cross's turn, which column do you want to drop your piece into? ";
         }
 
-        std::cin >> chosenColumn;
+        // Ensures the input is within bounds, in a free column, or input is numerical
+        bool validInput = false;
+        while (!validInput)
+        {
+            std::cin >> chosenColumn;
+
+            if (chosenColumn < 1 || chosenColumn > 7 || std::cin.fail())
+            {
+                std::cin.clear();
+                std::cin.ignore(10000, '\n'); // Resets the cin, either by ignoring 10,000 characters or when a new line is hit
+                std::cout << "Invalid Input! Must be 1-7! ";
+            }   
+            else if (board[0][chosenColumn - 1] != empty)
+                std::cout << "Column is full! Pick Again! ";
+            else
+                validInput = true;
+        }
+
         if (noughtTurn)
             updateBoard(board, chosenColumn - 1, nought);
         else
