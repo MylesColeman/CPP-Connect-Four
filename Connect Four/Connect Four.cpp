@@ -39,6 +39,40 @@ void updateBoard(std::vector<std::vector<char>>& board, int column, char playerP
     }
 }
 
+bool checkForWinner(const std::vector<std::vector<char>>& board, char playerPiece)
+{
+    // Horizontal Win
+    for (int r = 0; r < rows; r++)
+    {
+        for (int c = 0; c <= cols - 4; c++) // The last few columns don't need to be checked as we're checking from the starting points
+        {
+            if (board[r][c] == playerPiece &&
+                board[r][c + 1] == playerPiece &&
+                board[r][c + 2] == playerPiece &&
+                board[r][c + 3] == playerPiece)
+                return true;
+        }
+    }
+
+    // Vertical Win
+    for (int c = 0; c < cols; c++)
+    {
+        for (int r = 0; r <= rows - 4; r++)
+        {
+            if (board[r][c] == playerPiece &&
+                board[r + 1][c] == playerPiece &&
+                board[r + 2][c] == playerPiece &&
+                board[r + 3][c] == playerPiece)
+                return true;
+        }
+    }
+
+    // Horizontal Win
+
+
+    return false; // No winners
+}
+
 int main()
 {
     std::cout << "Connect Four!" << std::endl;
@@ -49,12 +83,14 @@ int main()
 	printBoard(board);
     std::cout << std::endl;
 	
-    bool gameOver = false;
+    bool gameOver = false; // For the while loop, to keep game running if not over
     bool noughtTurn = true;
+    int turnCount = 0; // Used to check for draws
 
     while (gameOver == false) // Loops whilst game isn't over
     {
         int chosenColumn = 0;
+        char currentPlayerPiece = (noughtTurn) ? nought : cross; // Checks whose turn it is for messages
 
         if (noughtTurn)
         {
@@ -83,14 +119,28 @@ int main()
                 validInput = true;
         }
 
-        if (noughtTurn)
-            updateBoard(board, chosenColumn - 1, nought);
-        else
-            updateBoard(board, chosenColumn - 1, cross);
+        updateBoard(board, chosenColumn - 1, currentPlayerPiece); // Updates the board with each turn
+        turnCount++;
 
-        printBoard(board);
+        printBoard(board); // Prints the board once a turn has been completed
         std::cout << std::endl;
 
-        noughtTurn = !noughtTurn; // Flips whose turn it is
+        if (checkForWinner(board, currentPlayerPiece))
+        {
+            gameOver = true;
+            if (currentPlayerPiece == nought)
+                std::cout << "Congratulations! Noughts Win!" << std::endl;
+            else
+                std::cout << "Congratulations! Crosses Win!" << std::endl;
+        }
+        else if (turnCount == rows * cols) // Checks for tie, via checking if the sum of the board's tiles has been reached
+        {
+            gameOver = true;
+            std::cout << "Its a Draw!" << std::endl;
+        }
+            
+
+        noughtTurn = !noughtTurn; // Switches whose turn it is
+
     }
 }
