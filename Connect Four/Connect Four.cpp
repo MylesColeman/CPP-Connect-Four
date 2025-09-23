@@ -11,6 +11,9 @@ const char divider = '|';
 const char nought = 'O';
 const char cross = 'X';
 
+bool noughtTurn = true;
+int chosenColumn = 0;
+
 // Prints the board to the console
 void printBoard(const std::vector<std::vector<char>>& board)
 {
@@ -26,6 +29,31 @@ void printBoard(const std::vector<std::vector<char>>& board)
     }
 }
 
+// Updates the board with the player's turn
+void updateBoard(std::vector<std::vector<char>>& board, int column, char playerPiece)
+{
+    std::cin >> chosenColumn;
+    chosenColumn -= 1; // Adjust for 0 index
+
+    if (noughtTurn)
+        std::cout << "Nought's turn, which row do you want to drop your counter in? (1-7)" << std::endl;
+    else
+        std::cout << "Cross's turn, which row do you want to drop your counter in? (1-7)" << std::endl;
+    std::cout << std::endl;
+
+    for (int r = rows - 1; r >= 0; r--)
+    {
+        if (board[r][column] == empty)
+        {
+            board[r][column] = playerPiece;
+            break;
+        }
+    }
+
+    printBoard(board);
+    std::cout << std::endl;
+}
+
 int main()
 {
     std::cout << "Connect Four!" << std::endl;
@@ -36,44 +64,13 @@ int main()
 	printBoard(board);
     std::cout << std::endl;
 
-    int chosenColumn = 0;
+    
 	
-    const bool gameOver = false;
+    bool gameOver = false;
 
     while (gameOver == false) // Loops whilst game isn't over
     {
-        std::cout << "Nought's turn, which row do you want to drop your counter in? (1-7)" << std::endl;
-        std::cout << std::endl;
-        std::cin >> chosenColumn;
-        chosenColumn -= 1; // Adjust for 0 index
-
-        for (int r = rows - 1; r >= 0; r--)
-        {
-            if (board[r][chosenColumn] == empty)
-            {
-                board[r][chosenColumn] = nought;
-                break;
-            }
-        }
-
-        printBoard(board);
-        std::cout << std::endl;
-
-        std::cout << "Cross's turn, which row do you want to drop your counter in? (1-7)" << std::endl;
-        std::cout << std::endl;
-        std::cin >> chosenColumn;
-        chosenColumn -= 1; // Adjust for 0 index
-
-        for (int r = rows - 1; r >= 0; r--)
-        {
-            if (board[r][chosenColumn] == empty)
-            {
-                board[r][chosenColumn] = cross;
-                break;
-            }
-        }
-
-        printBoard(board);
-        std::cout << std::endl;
+		updateBoard(board, chosenColumn, nought);
+        updateBoard(board, chosenColumn, cross);
     }
 }
