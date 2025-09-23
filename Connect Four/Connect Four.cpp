@@ -11,9 +11,6 @@ const char divider = '|';
 const char nought = 'O';
 const char cross = 'X';
 
-bool noughtTurn = true;
-int chosenColumn = 0;
-
 // Prints the board to the console
 void printBoard(const std::vector<std::vector<char>>& board)
 {
@@ -32,21 +29,6 @@ void printBoard(const std::vector<std::vector<char>>& board)
 // Updates the board with the player's turn
 void updateBoard(std::vector<std::vector<char>>& board, int column, char playerPiece)
 {
-    if (noughtTurn)
-    {
-        std::cout << "Nought's turn, which row do you want to drop your counter in? (1-7)" << std::endl;
-		noughtTurn = false;
-    }  
-    else
-    {
-        std::cout << "Cross's turn, which row do you want to drop your counter in? (1-7)" << std::endl;
-		noughtTurn = true;
-    }
-    std::cout << std::endl;
-
-    std::cin >> chosenColumn;
-    chosenColumn -= 1; // Adjust for 0 index
-
     for (int r = rows - 1; r >= 0; r--)
     {
         if (board[r][column] == empty)
@@ -55,9 +37,6 @@ void updateBoard(std::vector<std::vector<char>>& board, int column, char playerP
             break;
         }
     }
-
-    printBoard(board);
-    std::cout << std::endl;
 }
 
 int main()
@@ -71,10 +50,29 @@ int main()
     std::cout << std::endl;
 	
     bool gameOver = false;
+    bool noughtTurn = true;
+    int chosenColumn = 0;
 
     while (gameOver == false) // Loops whilst game isn't over
     {
-		updateBoard(board, chosenColumn, nought);
-        updateBoard(board, chosenColumn, cross);
+        if (noughtTurn)
+        {
+            std::cout << "Nought's turn, which column do you want to drop your piece into? ";
+        }
+        else
+        {
+            std::cout << "Cross's turn, which column do you want to drop your piece into? ";
+        }
+
+        std::cin >> chosenColumn;
+        if (noughtTurn)
+            updateBoard(board, chosenColumn - 1, nought);
+        else
+            updateBoard(board, chosenColumn - 1, cross);
+
+        printBoard(board);
+        std::cout << std::endl;
+
+        noughtTurn = !noughtTurn; // Flips whose turn it is
     }
 }
